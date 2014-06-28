@@ -1,7 +1,6 @@
 require 'test_helper'
 require 'menu_maker'
 require 'integration_test_helper'
-require File.expand_path('../../../../app/helpers/menu_maker/menu_helper', __FILE__)
 
 module MenuMaker
   class MenuHelperTest < ActionView::TestCase
