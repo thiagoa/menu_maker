@@ -95,7 +95,7 @@ Then pass the renderer into a Menu instance, build your menu and call render to 
 
 ```ruby
 # You could use yield(menu). This is here to illustrate how it works.
-menu = Menu.new(renderer) do |m|
+menu = MenuMaker::Menu.new(renderer) do |m|
   m.add 'Item', some_path
 end
 
@@ -106,12 +106,12 @@ That's it. You can also create renderers for any menu depth: just create a MenuR
 instance and pass it into the Menu instance:
 
 ```ruby
-renderer = MenuRendererContainer.new do |container|
+renderer = MenuMaker::MenuRendererContainer.new do |container|
   container.add_for_next_depth(CustomMenuRenderer.new(self, request.path))
   container.add_for_next_depth(CustomSubmenuRenderer.new(self, request.path))
 end
 
-menu = Menu.new(renderer) do |m|
+menu = MenuMaker::Menu.new(renderer) do |m|
   m.add 'Item', some_path do |submenu|
     submenu.add 'Subitem', some_path
   end
