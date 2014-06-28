@@ -5,7 +5,7 @@ Supports recursive menus and swappable renderers for any menu depth. For instanc
 for the main menu, another renderer for the submenu (if needed), and so forth.
 
 Note this gem doesn't bundle CSS or Javascripts for you. It just eases complex HTML menu creation, keeping
-your code neat and clean. In fact, it can be used to create non-HTML menus; you have to supply your own renderers
+your code neat and clean. Actually, it can be used to create non-HTML menus; you have to supply your own renderers
 for that (more below).
 
 ## Brief history
@@ -94,10 +94,8 @@ specify it.
 Then pass the renderer into a Menu instance, build your menu and call render to output the HTML:
 
 ```ruby
-menu = Menu.new(renderer)
-
 # You could use yield(menu). This is here to illustrate how it works.
-menu do |m|
+menu = Menu.new(renderer) do |m|
   m.add 'Item', some_path
 end
 
@@ -113,9 +111,7 @@ renderer = MenuRendererContainer.new do |container|
   container.add_for_next_depth(CustomSubmenuRenderer.new(self, request.path))
 end
 
-menu = Menu.new(renderer)
-
-menu do |m|
+menu = Menu.new(renderer) do |m|
   m.add 'Item', some_path do |submenu|
     submenu.add 'Subitem', some_path
   end
