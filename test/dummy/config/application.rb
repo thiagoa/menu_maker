@@ -1,6 +1,9 @@
 require File.expand_path('../boot', __FILE__)
 
-require 'rails/all'
+require 'rails'
+require 'action_view/railtie'
+require 'action_controller/railtie'
+require 'action_mailer/railtie'
 
 Bundler.require(*Rails.groups)
 require "menu_maker"
