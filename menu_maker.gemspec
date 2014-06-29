@@ -18,4 +18,5 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_development_dependency "rails", "~> 4.0"
+  s.add_development_dependency "shoulda-context", "~> 1.2.1"
 end

@@ -96,6 +96,10 @@ module MenuMaker
       def render_submenu
         has_submenu? ? submenu.render : ''
       end
+
+      def to_s
+        title
+      end
     end
 
     class MenuError < StandardError; end

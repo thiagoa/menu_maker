@@ -128,6 +128,105 @@ your own needs.
 
 ## Creating custom renderers
 
+### Proc renderers
+
+You can use any object which responds to *call* as a renderer. We will use raw HTML to illustrate
+these examples, so you can clearly see how a proc renderer works, without any conceptual overhead;
+You can use Rails HTML helpers (or any web framework) to make things cleaner.
+
+Proc renderers are recommended when your logic is short and simple; for complex logic we recommend
+extending the *MenuRenderer* class, which also provides useful helpers to assist you, so you don't
+have to worry about nasty details like calling *html\_safe* on you strings (*html\_safe* hell),
+and related concerns.
+
+```ruby
+renderer = proc do |menu|
+  items = menu.inject('') do |html, item|
+    html + "<li><a href=\"#{item.path}\">#{item}</a></li>"
+  end
+
+  "<ul>#{items}</ul>"
+end
+
+menu_maker = MenuMaker::Menu.new(renderer) do |menu|
+  menu.add 'Item', '/some/path'
+end
+
+# outputs <ul><li><a href="/some/path">Item</li></ul>
+menu_maker.render
+```
+
+If you want to render submenus, you must explicitly call *render\_submenu* on the menu item:
+
+```ruby
+renderer = proc do |menu|
+  items = menu.inject('') do |html, item|
+    html + "<li><a href=\"#{item.path}\">#{item}</a>#{item.render_submenu}</li>"
+  end
+
+  "<ul>#{items}</ul>"
+end
+
+menu_maker = MenuMaker::Menu.new(renderer) do |menu|
+  menu.add 'Item', '/some/path' do |submenu|
+    submenu.add 'Subitem', '/some/path/new'
+  end
+end
+
+# outputs
+#
+# <ul>
+#   <li>
+#     <a href="/some/path">Item</a>
+#     <ul>
+#       <li>
+#         <a href="/some/path/new">Subitem</a>
+#       </li>
+#     </ul>
+#   </li>
+# </ul>
+menu_maker.render
+
+```
+
+It becomes much more useful when you create a renderer like this:
+
+```ruby
+renderer = proc do |menu|
+  items = menu.inject('') do |html, item|
+    # Also checks for submenu paths
+    li_class = if item_has_path?(request.path)
+      ' class="active"'
+    end
+
+    link = "<a href=\"#{item.path}\">#{item}</a>"
+    html + "<li#{li_class || ''}>#{link} #{item.render_submenu}</li>"
+  end
+
+  "<ul>#{items}</ul>"
+end
+```
+
+We are adding an *active* class to the *li*, if the request path matches. You can also check if the item has
+a submenu and add a *dropdown* class to the *li*, like so:
+
+```ruby
+renderer = proc do |menu|
+  items = menu.inject('') do |html, item|
+    li_class = if item.has_submenu?
+      ' class="dropdown"'
+    end
+
+    link = "<a href=\"#{item.path}\">#{item}</a>"
+    html + "<li#{li_class || ''}>#{link} #{item.render_submenu}</li>"
+  end
+
+  "<ul>#{items}</ul>"
+end
+```
+
+### Class renderers
+
 TODO.
 
 ## Contributing
