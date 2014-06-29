@@ -8,7 +8,7 @@ Note this gem doesn't bundle CSS or Javascripts for you. It just eases complex H
 your code neat and clean. Actually, it can be used to create non-HTML menus; you have to supply your own renderers
 for that (more below).
 
-## Brief history
+## But why?
 
 This gem was born when I needed to build a complex menu, and couldn't figure out anything suited for the task.
 So I began like lots of Rails developers do: I quickly crafted a big and messy procedural helper method,
@@ -49,8 +49,8 @@ To create a menu like that, use the following code on your view:
 <% end %>
 ```
 
-That will output the whole HTML in your view; It will match the current request path and output the class
-'active open' as an attribute into the li tag.
+That will output the whole HTML in your view; It will match the current request path, and output the class
+'active open' as an attribute into the li tag which contains the active link.
 
 You can also output submenus:
 
@@ -65,9 +65,10 @@ You can also output submenus:
 <% end %>
 ```
 
-Note the submenu is currently rendered with different style and rules.
+Note the submenu is currently rendered (by default) with different style and rules.
 
-You can recurse into any menu depth you wish, though you can't currently do that with the default renderer.
+You can recurse into any menu depth you wish, though you can't currently do that (by default)
+with the default renderer, which only renders two depths.
 
 You can also provide a custom option hash for each menu item (it will be available inside your renderer):
 
@@ -88,18 +89,18 @@ renderer = MyRenderer.new(self, request.path)
 The first parameter is a context for the renderer to use. If you use it with Rails and from a helper module,
 for example, the *self* object will provide access to all the helpers. The second parameter is the current
 request path, which you can use inside your renderer to mark a menu item as active, for example. If your renderer
-extends from MenuRenderer and you are using Rails, the default path is an implicit request path; you won't need to
+extends from *MenuRenderer* and you are using Rails, the default path is an implicit request path; you won't need to
 specify it.
 
 Then pass the renderer into a Menu instance, build your menu and call render to output the HTML:
 
 ```ruby
 # You could use yield(menu). This is here to illustrate how it works.
-menu = MenuMaker::Menu.new(renderer) do |m|
-  m.add 'Item', some_path
+menu_maker = MenuMaker::Menu.new(renderer) do |menu|
+  menu.add 'Item', some_path
 end
 
-menu.render
+menu_maker.render
 ```
 
 That's it. You can also create renderers for any menu depth: just create a MenuRendererContainer
@@ -111,13 +112,13 @@ renderer = MenuMaker::MenuRendererContainer.new do |container|
   container.add_for_next_depth(CustomSubmenuRenderer.new(self, request.path))
 end
 
-menu = MenuMaker::Menu.new(renderer) do |m|
-  m.add 'Item', some_path do |submenu|
+menu_maker = MenuMaker::Menu.new(renderer) do |menu|
+  menu.add 'Item', some_path do |submenu|
     submenu.add 'Subitem', some_path
   end
 end
 
-menu.render
+menu_maker.render
 ```
 
 The first renderer passed into the container will render the main menu. The second renderer will
