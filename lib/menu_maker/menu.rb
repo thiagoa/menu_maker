@@ -92,6 +92,10 @@ module MenuMaker
       def respond_to_missing?(method)
         !!(options && options[method])
       end
+
+      def render_submenu
+        has_submenu? ? submenu.render : ''
+      end
     end
 
     class MenuError < StandardError; end

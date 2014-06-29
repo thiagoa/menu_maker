@@ -44,7 +44,7 @@ module MenuMaker
     private
 
     def find_current_path(current_path)
-      @current_path = current_path || request_path || ''
+      current_path || request_path || ''
     end
 
     def helpers_has_request?
