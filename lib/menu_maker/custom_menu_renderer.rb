@@ -1,20 +1,17 @@
 module MenuMaker
   class CustomMenuRenderer < MenuRenderer
     render do
-      out = build_menu do |item, css_class|
-        output = build_html do |html|
-          html << render_link(item)
-          html << item.render_submenu
-        end
+      output = build_menu do |item, css_class|
+        html = build_html { render_link(item) + item.render_submenu }
 
         css_class << 'dropdown'    if item.has_submenu?
         css_class << 'active open' if item.has_path? current_path
 
         options = { class: css_class.join(' ') } if css_class.any?
-        h.li(output, nil, options || {})
+        h.li(html, nil, options || {})
       end
 
-      h.content_tag(:ul, out, class: 'nav navbar-nav side-nav')
+      h.content_tag(:ul, output, class: 'nav navbar-nav side-nav')
     end
 
     private
