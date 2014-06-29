@@ -1,7 +1,6 @@
 # Menu Maker
 
-[![Gem Version][GV img]][Gem Version]
-[![Code Climate][CC img]][Code Climate]
+![Gem Version][GV img] ![Code Climate][CC img]
 
 Flexible solution to build any kind of menu in any Ruby framework. Currently best integrated with Rails.
 Supports recursive menus and swappable renderers for any menu depth. For instance, you can use a renderer
