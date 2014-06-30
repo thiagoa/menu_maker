@@ -74,11 +74,11 @@ module MenuMaker
       end
 
       def submenu_paths
-        has_submenu? ? submenu.items.map(&:path) : []
+        submenu.items.map(&:path) rescue []
       end
 
       def all_paths
-        [path] + submenu_paths
+        [path, *submenu_paths]
       end
 
       def has_path?(path)
