@@ -146,7 +146,7 @@ and related concerns.
 ```ruby
 renderer = proc do |menu|
   items = menu.inject('') do |html, item|
-    html + "<li><a href=\"#{item.path}\">#{item}</a></li>"
+    "#{html} <li><a href=\"#{item.path}\">#{item}</a></li>"
   end
 
   "<ul>#{items}</ul>"
@@ -165,7 +165,7 @@ If you want to render submenus, you must explicitly call *render\_submenu* on th
 ```ruby
 renderer = proc do |menu|
   items = menu.inject('') do |html, item|
-    html + "<li><a href=\"#{item.path}\">#{item}</a>#{item.render_submenu}</li>"
+    "#{html} <li><a href=\"#{item.path}\">#{item}</a>#{item.render_submenu}</li>"
   end
 
   "<ul>#{items}</ul>"
@@ -198,13 +198,11 @@ It becomes much more useful when you create a renderer like this:
 ```ruby
 renderer = proc do |menu|
   items = menu.inject('') do |html, item|
-    # Also checks for submenu paths
-    li_class = if item_has_path?(request.path)
-      ' class="active"'
-    end
+    # has_path? Also checks for submenu paths
+    li_class = ' class="active"' if item_has_path?(request.path)
+    link     = "<a href=\"#{item.path}\">#{item}</a>"
 
-    link = "<a href=\"#{item.path}\">#{item}</a>"
-    html + "<li#{li_class || ''}>#{link} #{item.render_submenu}</li>"
+    "#{html} <li#{li_class || ''}>#{link} #{item.render_submenu}</li>"
   end
 
   "<ul>#{items}</ul>"
@@ -217,12 +215,10 @@ a submenu and add a *dropdown* class to the *li*, like so:
 ```ruby
 renderer = proc do |menu|
   items = menu.inject('') do |html, item|
-    li_class = if item.has_submenu?
-      ' class="dropdown"'
-    end
+    li_class = ' class="dropdown"' if item.has_submenu?
+    link     = "<a href=\"#{item.path}\">#{item}</a>"
 
-    link = "<a href=\"#{item.path}\">#{item}</a>"
-    html + "<li#{li_class || ''}>#{link} #{item.render_submenu}</li>"
+    "#{html} <li#{li_class || ''}>#{link} #{item.render_submenu}</li>"
   end
 
   "<ul>#{items}</ul>"
