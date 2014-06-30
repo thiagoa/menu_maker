@@ -5,8 +5,8 @@ module MenuMaker
     def proc_renderer
       proc do |menu|
         items = menu.inject('') do |html, item|
-          link  = "<a href=\"#{item.path}\">#{item}</a>"
-          html + "<li>#{link}#{item.render_submenu}</li>"
+          link  = %{<a href="#{item.path}">#{item}</a>}
+          html + %{<li>#{link}#{item.render_submenu}</li>}
         end
 
         "<ul>#{items}</ul>"
@@ -31,8 +31,8 @@ module MenuMaker
             end
           end
 
-          submenu  = "<ul><li><a href=\"/some/path/new\">First sublink</a></li></ul>"
-          expected = "<ul><li><a href=\"/some/path\">First link</a>#{submenu}</li></ul>"
+          submenu  = %{<ul><li><a href="/some/path/new">First sublink</a></li></ul>}
+          expected = %{<ul><li><a href="/some/path">First link</a>#{submenu}</li></ul>}
 
           assert_equal expected, menu_maker.render
         end
@@ -54,7 +54,7 @@ module MenuMaker
           end
 
           submenu  = "<ul><li>Static</li></ul>"
-          expected = "<ul><li><a href=\"/some/path\">First link</a>#{submenu}</li></ul>"
+          expected = %{<ul><li><a href="/some/path">First link</a>#{submenu}</li></ul>}
 
           assert_equal expected, menu_maker.render
         end

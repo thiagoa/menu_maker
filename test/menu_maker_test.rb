@@ -12,7 +12,7 @@ module MenuMaker
         suppliers_li_class: 'dropdown'
       )
 
-      assert_equal example_menu('/cms/dashboard').render, expected_output
+      assert_equal expected_output, example_menu('/cms/dashboard').render
     end
 
     test 'outputs the menu with the first li submenu item active' do
@@ -21,7 +21,7 @@ module MenuMaker
         add_supplier_class: 'active'
       )
 
-      assert_equal example_menu('/cms/suppliers/new').render, expected_output
+      assert_equal expected_output, example_menu('/cms/suppliers/new').render
     end
 
     test 'outputs the menu with the second li submenu item selected' do
@@ -30,7 +30,7 @@ module MenuMaker
         list_supplier_class: 'active'
       )
 
-      assert_equal example_menu('/cms/suppliers').render, expected_output
+      assert_equal expected_output, example_menu('/cms/suppliers').render
     end
   end
 end
