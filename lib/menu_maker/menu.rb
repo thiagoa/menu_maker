@@ -2,10 +2,9 @@ module MenuMaker
   class Menu
     include Enumerable
 
-    def initialize(renderer, depth = 1)
-      @items         = {}
-      @current_depth = depth
-      @renderer      = renderer
+    def initialize(renderer)
+      @items    = {}
+      @renderer = renderer
 
       yield self if block_given?
     end
@@ -28,8 +27,12 @@ module MenuMaker
     end
 
     def render
-      renderer_for(@current_depth).call(self)
+      renderer_for(current_depth).call(self)
     end
+
+    protected
+
+    attr_writer :current_depth
 
     private
 
@@ -38,14 +41,14 @@ module MenuMaker
     end
 
     def current_submenu
-      current_item.submenu ||
-        current_item.create_submenu!(
-          renderer_for(next_depth), next_depth
-        )
+      current_item.submenu || create_submenu!
     end
 
-    def next_depth
-      @current_depth + 1
+    def create_submenu!
+      submenu = Menu.new renderer_for(next_depth)
+      submenu.current_depth = next_depth
+
+      current_item.submenu = submenu
     end
 
     def renderer_for(depth)
@@ -62,15 +65,19 @@ module MenuMaker
       renderer
     end
 
+    def current_depth
+      @current_depth || 1
+    end
+
+    def next_depth
+      current_depth + 1
+    end
+
     MenuItem = Struct.new(:title, :path, :options) do
       attr_accessor :submenu
 
       def has_submenu?
         !@submenu.nil?
-      end
-
-      def create_submenu!(renderer, depth)
-        @submenu = Menu.new(renderer, depth)
       end
 
       def submenu_paths
