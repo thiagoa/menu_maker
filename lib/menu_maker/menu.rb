@@ -73,7 +73,17 @@ module MenuMaker
       current_depth + 1
     end
 
-    MenuItem = Struct.new(:title, :path, :options) do
+    class MenuItem
+      attr_reader :title, :paths, :options
+
+      def initialize(title, path = nil, options = nil)
+        @title   = title
+        @paths   = []
+        @options = options
+
+        @paths << path if path
+      end
+
       attr_accessor :submenu
 
       def has_submenu?
@@ -81,11 +91,15 @@ module MenuMaker
       end
 
       def submenu_paths
-        submenu.items.map(&:path) rescue []
+        return [] unless has_submenu?
+
+        submenu.items.reduce([]) do |all, item|
+          all + item.paths + item.submenu_paths
+        end.flatten
       end
 
       def all_paths
-        [path, *submenu_paths]
+        [*paths, *submenu_paths]
       end
 
       def has_path?(path)
@@ -98,6 +112,10 @@ module MenuMaker
 
       def respond_to_missing?(method)
         !!(options && options[method])
+      end
+
+      def path
+        @paths.first
       end
 
       def render_submenu
