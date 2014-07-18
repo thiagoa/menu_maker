@@ -54,7 +54,7 @@ module MenuMaker
     end
 
     test "equality works with a convertible array" do
-      assert_equal Path.new(:post, '/path'), [:post, '/path']
+      assert Path.new(:post, '/path') == [:post, '/path']
     end
   end
 end

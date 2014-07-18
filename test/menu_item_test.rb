@@ -12,10 +12,10 @@ module MenuMaker
 
     test 'accepts many paths' do
       item = Menu::MenuItem.new 'My title', 'path/1', 'path/2', 'path/3'
-      assert_equal ['path/1', 'path/2', 'path/3'], item.paths
+      assert_equal ['path/1', 'path/2', 'path/3'], item.addresses
     end
 
-    test 'submenu_paths returns submenu paths recursively' do
+    test 'submenu_addresses returns submenu paths recursively' do
       item = Menu::MenuItem.new 'Level 1', 'level/1'
 
       menu2 = Menu.new(->(){})
@@ -33,10 +33,10 @@ module MenuMaker
 
       expected = %w[level/2 level/2/1 level/2/2 level/3 level/4 level/5 level/6]
 
-      assert_equal expected, item.submenu_paths.sort
+      assert_equal expected, item.submenu_addresses.sort
     end
 
-    test 'all_paths returns submenu paths + current menu path' do
+    test 'all_addresses returns submenu paths + current menu path' do
       item = Menu::MenuItem.new 'Level 1', 'level/1'
 
       menu2 = Menu.new(->(){})
@@ -52,7 +52,7 @@ module MenuMaker
 
       expected = %w[level/1 level/2 level/3 level/4 level/5 level/6]
 
-      assert_equal expected, item.all_paths.sort
+      assert_equal expected, item.all_addresses.sort
     end
 
     test 'has_path? also checks for submenus' do
@@ -72,6 +72,13 @@ module MenuMaker
       assert item.has_path?('level/4')
       assert item.has_path?('level/1')
       refute item.has_path?('level/8')
+    end
+
+    test 'has_path? matches on other restful paths' do
+      item = Menu::MenuItem.new 'Item', 'main_path', [:post, 'other/path']
+
+      assert item.has_path? [:post, 'other/path']
+      assert item.has_path? Path.new(:post, 'other/path')
     end
 
     test "has_submenu? when returns false" do
