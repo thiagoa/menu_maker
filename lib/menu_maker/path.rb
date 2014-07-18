@@ -1,7 +1,7 @@
 module MenuMaker
-  METHODS = %i[get post put patch delete]
-
   class Path
+    METHODS = %i[get post put patch delete]
+
     attr_reader :method, :address
 
     def initialize(method, address)
