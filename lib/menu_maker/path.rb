@@ -4,29 +4,6 @@ module MenuMaker
   class Path
     attr_reader :method, :address
 
-    def self.convert(path)
-      method = path.class.name.to_s.split('::').last.to_s.downcase
-      method = :other unless Path.respond_to? "from_#{method}"
-
-      Path.send "from_#{method}", path
-    end
-
-    def self.from_string(address)
-      StringPathConverter.convert address
-    end
-
-    def self.from_array(path)
-      ArrayPathConverter.convert path
-    end
-
-    def self.from_other(path)
-      GenericPathConverter.convert path
-    end
-
-    def self.from_path(path)
-      GenericPathConverter.convert path
-    end
-
     def initialize(method, address)
       fail PathError unless METHODS.include? method
 
@@ -42,6 +19,16 @@ module MenuMaker
     def to_s
       address
     end
+  end
+
+  def Path.convert(path)
+    namespace = to_s.split('::')[-2]
+    type      = path.class.name.to_s.split('::').last.to_s
+    converter = "#{namespace}::#{type}PathConverter"
+
+    Object.const_get(converter).convert path
+  rescue NameError
+    GenericPathConverter.convert path
   end
 
   class ArrayPathConverter
