@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'menu_maker/path'
 
 module MenuMaker
   class PathTest < ActionView::TestCase

@@ -1,4 +1,5 @@
 require "menu_maker/version"
+require "menu_maker/path"
 require "menu_maker/menu"
 require "menu_maker/menu_renderer"
 require "menu_maker/menu_renderer_container"

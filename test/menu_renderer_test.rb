@@ -1,6 +1,5 @@
 require 'test_helper'
 require 'ostruct'
-require 'menu_maker/path'
 
 module MenuMaker
   class MenuRendererTest < ActiveSupport::TestCase
