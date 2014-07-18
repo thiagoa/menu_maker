@@ -54,13 +54,13 @@ module MenuMaker
 
       class GenericConverter
         def self.convert(path)
-          return path if path.is_a?(Path)
-
-          unless %i[path method].all? { |m| path.respond_to?(m) }
-            fail PathError
-          end
+          fail PathError unless respond_to_protocol?(path)
 
           Path.new path.method, path.path
+        end
+
+        def self.respond_to_protocol?(path)
+          path.respond_to?(:path) && path.respond_to?(:method)
         end
       end
     end
