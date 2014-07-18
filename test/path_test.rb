@@ -9,7 +9,7 @@ module MenuMaker
     end
 
     test "doesn't accept a method other than get, post, put, patch and delete" do
-      assert_raise Path::PathError do
+      assert_raise PathError do
         Path.new :ouch, '/path'
       end
     end
@@ -54,14 +54,8 @@ module MenuMaker
     end
 
     test "fails if can't create path from object which responds to path and method" do
-      assert_raise Path::PathError do
+      assert_raise PathError do
         Path.convert(Object.new)
-      end
-    end
-
-    test "from_path fails when not a path" do
-      assert_raise Path::PathError do
-        Path.from_path(Object.new)
       end
     end
 

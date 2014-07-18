@@ -1,7 +1,7 @@
 module MenuMaker
-  class Path
-    METHODS = %i[get post put patch delete]
+  METHODS = %i[get post put patch delete]
 
+  class Path
     attr_reader :method, :address
 
     def self.convert(path)
@@ -12,26 +12,19 @@ module MenuMaker
     end
 
     def self.from_string(address)
-      Path.new(:get, address.to_s)
+      StringPathConverter.convert address
     end
 
     def self.from_array(path)
-      has_method = proc { |el| METHODS.include? el }
-
-      method  = path.find(&has_method) || :get
-      address = path.delete_if(&has_method).first
-
-      new method, address
+      ArrayPathConverter.convert path
     end
 
-    def self.from_other(object)
-      fail PathError unless %i[path method].all? { |m| object.respond_to?(m) }
-
-      new(object.method.to_sym.downcase, object.path)
+    def self.from_other(path)
+      GenericPathConverter.convert path
     end
 
     def self.from_path(path)
-      path if path.is_a?(Path) or fail PathError
+      GenericPathConverter.convert path
     end
 
     def initialize(method, address)
@@ -49,9 +42,38 @@ module MenuMaker
     def to_s
       address
     end
-
-    PathError = Class.new StandardError
   end
+
+  class ArrayPathConverter
+    def self.convert(path)
+      has_method = proc { |el| METHODS.include? el }
+
+      method  = path.find(&has_method) || :get
+      address = path.delete_if(&has_method).first
+
+      Path.new method, address
+    end
+  end
+
+  class StringPathConverter
+    def self.convert(path)
+      Path.new(:get, path.to_s)
+    end
+  end
+
+  class GenericPathConverter
+    def self.convert(path)
+      return path if path.is_a?(Path)
+
+      unless %i[path method].all? { |m| path.respond_to?(m) }
+        fail PathError
+      end
+
+      Path.new path.method.to_sym.downcase, path.path
+    end
+  end
+
+  PathError = Class.new StandardError
 end
 
 module Kernel
