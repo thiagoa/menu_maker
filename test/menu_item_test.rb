@@ -12,7 +12,7 @@ module MenuMaker
 
     test 'accepts many paths' do
       item = Menu::MenuItem.new 'My title', 'path/1', 'path/2', 'path/3'
-      assert_equal ['path/1', 'path/2', 'path/3'], item.paths.map(&:address)
+      assert_equal ['path/1', 'path/2', 'path/3'], item.paths.map(&:path)
     end
 
     test 'submenu_paths returns submenu paths recursively' do
@@ -33,7 +33,7 @@ module MenuMaker
 
       expected = %w[level/2 level/2/1 level/2/2 level/3 level/4 level/5 level/6]
 
-      assert_equal expected, item.submenu_paths.map(&:address).sort
+      assert_equal expected, item.submenu_paths.map(&:path).sort
     end
 
     test 'all_paths returns submenu paths + current menu path' do
@@ -52,7 +52,7 @@ module MenuMaker
 
       expected = %w[level/1 level/2 level/3 level/4 level/5 level/6]
 
-      assert_equal expected, item.all_paths.map(&:address).sort
+      assert_equal expected, item.all_paths.map(&:path).sort
     end
 
     test 'has_path? also checks for submenus' do
@@ -78,7 +78,7 @@ module MenuMaker
       menu = Menu.new proc {}
       menu.add('Item', 'path/1', [:post, 'path/2'], [:put, 'path/3'], option: 'optional')
 
-      result = menu.items.first.paths.map(&:address)
+      result = menu.items.first.paths.map(&:path)
 
       expected = %w[path/1 path/2 path/3]
 

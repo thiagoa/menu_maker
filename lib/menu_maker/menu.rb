@@ -117,7 +117,7 @@ module MenuMaker
       end
 
       def path
-        @paths.first.address
+        @paths.first.path
       end
 
       def render_submenu

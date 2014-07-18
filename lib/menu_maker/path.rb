@@ -6,24 +6,24 @@ module MenuMaker
       METHODS.include? method
     end
 
-    attr_reader :method, :address
+    attr_reader :method, :path
 
-    def initialize(method, address)
+    def initialize(method, path)
       method = method.to_sym.downcase
 
       fail PathError unless self.class.valid_method? method
 
-      @method  = method
-      @address = address.to_s
+      @method = method
+      @path   = path.to_s
     end
 
     def ==(other)
       other = Converter.convert(other)
-      method == other.method && address == other.address
+      method == other.method && path == other.path
     end
 
     def to_s
-      address
+      path
     end
 
     module Converter
@@ -39,10 +39,10 @@ module MenuMaker
         def self.convert(path)
           has_method = proc { |el| Path.valid_method? el }
 
-          method  = path.find(&has_method) || :get
-          address = path.delete_if(&has_method).first
+          method = path.find(&has_method) || :get
+          path   = path.delete_if(&has_method).first
 
-          Path.new method, address
+          Path.new method, path
         end
       end
 

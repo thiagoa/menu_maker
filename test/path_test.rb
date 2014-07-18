@@ -14,7 +14,7 @@ module MenuMaker
       end
     end
 
-    test 'to_s returns the address' do
+    test 'to_s returns the path string' do
       assert_equal '/path', Path.new(:get, '/path').to_s
     end
 
