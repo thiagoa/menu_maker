@@ -5,6 +5,8 @@ require "rails/test_help"
 require "shoulda-context"
 require "codeclimate-test-reporter"
 
+CodeClimate::TestReporter.start
+
 Rails.backtrace_cleaner.remove_silencers!
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
