@@ -9,6 +9,8 @@ module MenuMaker
     attr_reader :method, :address
 
     def initialize(method, address)
+      method = method.to_sym.downcase
+
       fail PathError unless self.class.valid_method? method
 
       @method  = method
@@ -58,7 +60,7 @@ module MenuMaker
             fail PathError
           end
 
-          Path.new path.method.to_sym.downcase, path.path
+          Path.new path.method, path.path
         end
       end
     end
