@@ -1,6 +1,6 @@
 # Menu Maker
 
-[![Gem Version](https://badge.fury.io/rb/menu_maker.png)](http://badge.fury.io/rb/webnames)
+[![Gem Version](https://badge.fury.io/rb/menu_maker.png)](http://badge.fury.io/rb/menu_maker)
 [![Code Climate](https://codeclimate.com/github/thiagoa/menu_maker.png)](https://codeclimate.com/github/thiagoa/menu_maker)
 
 Flexible solution to build any kind of menu in any Ruby framework. Currently best integrated with Rails.
