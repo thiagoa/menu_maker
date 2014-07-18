@@ -76,5 +76,9 @@ module MenuMaker
     test "equality works with a convertible array" do
       assert Path.new(:post, '/path') == [:post, '/path']
     end
+
+    test "a Path global conversion method is also available" do
+      assert_equal Path.new(:post, '/path'), Path(:post, '/path')
+    end
   end
 end

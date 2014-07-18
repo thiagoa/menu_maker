@@ -53,3 +53,9 @@ module MenuMaker
     PathError = Class.new StandardError
   end
 end
+
+module Kernel
+  def Path(*args)
+    ::MenuMaker::Path.convert(args)
+  end
+end
