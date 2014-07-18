@@ -2,10 +2,14 @@ module MenuMaker
   class Path
     METHODS = %i[get post put patch delete]
 
+    def self.valid_method?(method)
+      METHODS.include? method
+    end
+
     attr_reader :method, :address
 
     def initialize(method, address)
-      fail PathError unless METHODS.include? method
+      fail PathError unless self.class.valid_method? method
 
       @method  = method
       @address = address.to_s
@@ -31,7 +35,7 @@ module MenuMaker
 
       class ArrayConverter
         def self.convert(path)
-          has_method = proc { |el| METHODS.include? el }
+          has_method = proc { |el| Path.valid_method? el }
 
           method  = path.find(&has_method) || :get
           address = path.delete_if(&has_method).first
