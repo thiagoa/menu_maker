@@ -75,6 +75,6 @@ module MenuMaker
       current_depth + 1
     end
 
-    class MenuError < StandardError; end
+    MenuError = Class.new StandardError
   end
 end
