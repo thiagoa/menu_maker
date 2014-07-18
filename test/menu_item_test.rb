@@ -12,10 +12,10 @@ module MenuMaker
 
     test 'accepts many paths' do
       item = Menu::MenuItem.new 'My title', 'path/1', 'path/2', 'path/3'
-      assert_equal ['path/1', 'path/2', 'path/3'], item.addresses
+      assert_equal ['path/1', 'path/2', 'path/3'], item.paths.map(&:address)
     end
 
-    test 'submenu_addresses returns submenu paths recursively' do
+    test 'submenu_paths returns submenu paths recursively' do
       item = Menu::MenuItem.new 'Level 1', 'level/1'
 
       menu2 = Menu.new(->(){})
@@ -33,10 +33,10 @@ module MenuMaker
 
       expected = %w[level/2 level/2/1 level/2/2 level/3 level/4 level/5 level/6]
 
-      assert_equal expected, item.submenu_addresses.sort
+      assert_equal expected, item.submenu_paths.map(&:address).sort
     end
 
-    test 'all_addresses returns submenu paths + current menu path' do
+    test 'all_paths returns submenu paths + current menu path' do
       item = Menu::MenuItem.new 'Level 1', 'level/1'
 
       menu2 = Menu.new(->(){})
@@ -52,7 +52,7 @@ module MenuMaker
 
       expected = %w[level/1 level/2 level/3 level/4 level/5 level/6]
 
-      assert_equal expected, item.all_addresses.sort
+      assert_equal expected, item.all_paths.map(&:address).sort
     end
 
     test 'has_path? also checks for submenus' do

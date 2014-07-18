@@ -92,32 +92,12 @@ module MenuMaker
         @paths
       end
 
-      def addresses
-        @paths.map(&:address)
-      end
-
       def submenu_paths
         return [] unless has_submenu?
 
         submenu.items.reduce([]) do |all, item|
           all + item.paths + item.submenu_paths
         end.flatten
-      end
-
-      def submenu_addresses
-        return [] unless has_submenu?
-
-        submenu.items.reduce([]) do |all, item|
-          all + item.addresses + item.submenu_addresses
-        end.flatten
-      end
-
-      def all_paths
-        [*paths, *submenu_paths]
-      end
-
-      def all_addresses
-        [*addresses, *submenu_addresses]
       end
 
       def all_paths
