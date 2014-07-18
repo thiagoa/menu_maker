@@ -1,3 +1,4 @@
+require 'test_helper'
 require 'menu_maker/path'
 
 module MenuMaker
@@ -37,6 +38,26 @@ module MenuMaker
     test "returns back the path if already a Path" do
       path = Path.new :put, '/path'
       assert_equal path, Path.convert(path)
+    end
+
+    test "creates a path from an object wich responds to path and method" do
+      request = Class.new do
+        def path
+          '/path'
+        end
+
+        def method
+          'PUT'
+        end
+      end.new
+
+      assert_equal Path.new(:put, '/path'), Path.convert(request)
+    end
+
+    test "fails if can't create path from object which responds to path and method" do
+      assert_raise Path::PathError do
+        Path.convert(Object.new)
+      end
     end
 
     test "from_path fails when not a path" do

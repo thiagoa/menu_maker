@@ -5,12 +5,10 @@ module MenuMaker
     attr_reader :method, :address
 
     def self.convert(path)
-      klass  = path.class.name.split('::').last.downcase
-      method = :"from_#{klass}"
+      method = path.class.name.to_s.split('::').last.to_s.downcase
+      method = :other unless Path.respond_to? "from_#{method}"
 
-      fail PathError unless Path.respond_to? method
-
-      Path.send method, path
+      Path.send "from_#{method}", path
     end
 
     def self.from_string(address)
@@ -24,6 +22,12 @@ module MenuMaker
       address = path.delete_if(&has_method).first
 
       new method, address
+    end
+
+    def self.from_other(object)
+      fail PathError unless %i[path method].all? { |m| object.respond_to?(m) }
+
+      new(object.method.to_sym.downcase, object.path)
     end
 
     def self.from_path(path)
