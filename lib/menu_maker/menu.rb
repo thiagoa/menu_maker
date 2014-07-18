@@ -45,10 +45,12 @@ module MenuMaker
     end
 
     def create_submenu!
-      submenu = Menu.new renderer_for(next_depth)
-      submenu.current_depth = next_depth
+      renderer = renderer_for next_depth
+      submenu  = Menu.new(renderer)
 
-      current_item.submenu = submenu
+      current_item.submenu = submenu.tap do |m|
+        m.current_depth = next_depth
+      end
     end
 
     def renderer_for(depth)
