@@ -74,6 +74,18 @@ module MenuMaker
       refute item.has_path?('level/8')
     end
 
+    test 'Menu#add accepts multiple paths and options' do
+      menu = Menu.new proc {}
+      menu.add('Item', 'path/1', [:post, 'path/2'], [:put, 'path/3'], option: 'optional')
+
+      result = menu.items.first.paths.map(&:address)
+
+      expected = %w[path/1 path/2 path/3]
+
+      assert_equal expected, result
+      assert_equal 'optional', menu.items.first.option
+    end
+
     test 'has_path? matches on other restful paths' do
       item = Menu::MenuItem.new 'Item', 'main_path', [:post, 'other/path']
 

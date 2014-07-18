@@ -17,8 +17,8 @@ module MenuMaker
       items.each(&block)
     end
 
-    def add(title, path, options = {})
-      @items[title] = MenuItem.new(title, path, options)
+    def add(title, *paths, **options)
+      @items[title] = MenuItem.new(title, *paths, options)
       @current_item = title
 
       yield current_submenu if block_given?
