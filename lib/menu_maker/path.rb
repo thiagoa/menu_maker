@@ -19,45 +19,50 @@ module MenuMaker
     def to_s
       address
     end
+
+    module Converter
+      def self.convert(path)
+        type      = path.class.name.to_s.split('::').last.to_s
+        converter = "#{type}PathConverter"
+
+        const_get(converter).convert path
+      rescue NameError
+        GenericPathConverter.convert path
+      end
+
+      class ArrayPathConverter
+        def self.convert(path)
+          has_method = proc { |el| METHODS.include? el }
+
+          method  = path.find(&has_method) || :get
+          address = path.delete_if(&has_method).first
+
+          Path.new method, address
+        end
+      end
+
+      class StringPathConverter
+        def self.convert(path)
+          Path.new(:get, path.to_s)
+        end
+      end
+
+      class GenericPathConverter
+        def self.convert(path)
+          return path if path.is_a?(Path)
+
+          unless %i[path method].all? { |m| path.respond_to?(m) }
+            fail PathError
+          end
+
+          Path.new path.method.to_sym.downcase, path.path
+        end
+      end
+    end
   end
 
   def Path.convert(path)
-    namespace = to_s.split('::')[-2]
-    type      = path.class.name.to_s.split('::').last.to_s
-    converter = "#{namespace}::#{type}PathConverter"
-
-    Object.const_get(converter).convert path
-  rescue NameError
-    GenericPathConverter.convert path
-  end
-
-  class ArrayPathConverter
-    def self.convert(path)
-      has_method = proc { |el| METHODS.include? el }
-
-      method  = path.find(&has_method) || :get
-      address = path.delete_if(&has_method).first
-
-      Path.new method, address
-    end
-  end
-
-  class StringPathConverter
-    def self.convert(path)
-      Path.new(:get, path.to_s)
-    end
-  end
-
-  class GenericPathConverter
-    def self.convert(path)
-      return path if path.is_a?(Path)
-
-      unless %i[path method].all? { |m| path.respond_to?(m) }
-        fail PathError
-      end
-
-      Path.new path.method.to_sym.downcase, path.path
-    end
+    Path::Converter.convert path
   end
 
   PathError = Class.new StandardError
