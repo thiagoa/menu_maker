@@ -58,9 +58,9 @@ module MenuMaker
         end
       end
     end
-  end
 
-  PathError = Class.new StandardError
+    PathError = Class.new StandardError
+  end
 end
 
 module Kernel
