@@ -12,7 +12,7 @@ module MenuMaker
     end
 
     def ==(other)
-      other = self.class.convert(other)
+      other = Converter.convert(other)
       method == other.method && address == other.address
     end
 
@@ -22,10 +22,9 @@ module MenuMaker
 
     module Converter
       def self.convert(path)
-        type      = path.class.name.to_s.split('::').last.to_s
-        converter = "#{type}PathConverter"
+        type = path.class.name.to_s.split('::').last.to_s
 
-        const_get(converter).convert path
+        const_get("#{type}PathConverter").convert path
       rescue NameError
         GenericPathConverter.convert path
       end
@@ -61,15 +60,11 @@ module MenuMaker
     end
   end
 
-  def Path.convert(path)
-    Path::Converter.convert path
-  end
-
   PathError = Class.new StandardError
 end
 
 module Kernel
   def Path(*args)
-    ::MenuMaker::Path.convert(args)
+    ::MenuMaker::Path::Converter.convert(args)
   end
 end

@@ -19,24 +19,24 @@ module MenuMaker
     end
 
     test 'creates a get path from a given string' do
-      assert_equal Path.new(:get, '/path'), Path.convert('/path')
+      assert_equal Path.new(:get, '/path'), Path::Converter.convert('/path')
     end
 
     test 'creates a path from an array' do
-      assert_equal Path.new(:post, '/path'), Path.convert([:post, '/path'])
+      assert_equal Path.new(:post, '/path'), Path::Converter.convert([:post, '/path'])
     end
 
     test "creates a path from an array assumes get when can't find request method" do
-      assert_equal Path.new(:get, '/path'), Path.convert(['/path'])
+      assert_equal Path.new(:get, '/path'), Path::Converter.convert(['/path'])
     end
 
     test "creates a path from an array on empty array creates empty get path" do
-      assert_equal Path.new(:get, ''), Path.convert([])
+      assert_equal Path.new(:get, ''), Path::Converter.convert([])
     end
 
     test "returns back the path if already a Path" do
       path = Path.new :put, '/path'
-      assert_equal path, Path.convert(path)
+      assert_equal path, Path::Converter.convert(path)
     end
 
     test "creates a path from an object wich responds to path and method" do
@@ -50,12 +50,12 @@ module MenuMaker
         end
       end.new
 
-      assert_equal Path.new(:put, '/path'), Path.convert(request)
+      assert_equal Path.new(:put, '/path'), Path::Converter.convert(request)
     end
 
     test "fails if can't create path from object which responds to path and method" do
       assert_raise PathError do
-        Path.convert(Object.new)
+        Path::Converter.convert(Object.new)
       end
     end
 

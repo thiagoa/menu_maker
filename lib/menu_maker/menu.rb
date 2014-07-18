@@ -78,7 +78,7 @@ module MenuMaker
 
       def initialize(title, *paths, **options)
         @title   = title
-        @paths   = paths.map { |p| Path.convert(p) }
+        @paths   = paths.map { |p| Path::Converter.convert(p) }
         @options = options
       end
 
@@ -105,7 +105,7 @@ module MenuMaker
       end
 
       def has_path?(path)
-        all_paths.include? Path.convert(path)
+        all_paths.include? Path::Converter.convert(path)
       end
 
       def method_missing(method, *args)

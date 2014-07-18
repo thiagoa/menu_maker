@@ -44,7 +44,7 @@ module MenuMaker
     private
 
     def find_current_path(current_path)
-      Path.convert(current_path || request || '')
+      Path::Converter.convert(current_path || request || '')
     end
 
     def helpers_has_request?
