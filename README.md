@@ -55,6 +55,30 @@ To create a menu like that, use the following code on your view:
 That will output the whole HTML in your view; It will match the current request path, and output the class
 'active open' as an attribute into the li tag which contains the active link.
 
+It's also possible to supply more than one path for a single menu item, useful when an item needs to be active
+in the context of other paths or request methods. For instance, a *Create User* menu item needs to be active whether
+using the **GET new** or **POST create** restful actions; that's because if the save fails, the create action will
+render back the "new" template. Note that the first path is the main one, and will be used in the anchor with the default
+renderer; this is also the recomended behavior for custom renderers. Currently, with the default renderer, the first
+path needs to be **GET**, otherwise it will be interpreted as **GET** anyway.
+
+```erb
+<%= menu_maker do |menu| %>
+  <% menu.add 'Create user', new_user_path, [:post, users_path] %>
+<% end %>
+```
+
+There is also a Path conversion method if you prefer:
+
+```erb
+<%= menu_maker do |menu| %>
+  <% menu.add 'Create user', Path(new_user_path), Path(:post, users_path) %>
+<% end %>
+```
+
+The path inputs are maleable, and MenuMaker will do its best to sensibly convert
+a path internally.
+
 You can also output submenus:
 
 ```erb
