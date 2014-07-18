@@ -38,6 +38,7 @@ module MenuMaker
     end
 
     def ==(other)
+      other = self.class.convert(other)
       method == other.method && address == other.address
     end
 

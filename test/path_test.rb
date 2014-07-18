@@ -44,5 +44,17 @@ module MenuMaker
         Path.from_path(Object.new)
       end
     end
+
+    test "equality works with an equal path" do
+      assert_equal Path.new(:put, '/path'), Path.new(:put, '/path')
+    end
+
+    test "equality works with a convertible string" do
+      assert_equal Path.new(:get, '/path'), '/path'
+    end
+
+    test "equality works with a convertible array" do
+      assert_equal Path.new(:post, '/path'), [:post, '/path']
+    end
   end
 end
