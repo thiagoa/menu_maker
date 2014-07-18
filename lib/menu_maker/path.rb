@@ -1,19 +1,17 @@
 module MenuMaker
-  PathError = Class.new StandardError
-
-  def Path(path)
-    klass  = path.class.name.split('::').last.downcase
-    method = :"from_#{klass}"
-
-    fail PathError unless Path.respond_to? method
-
-    Path.send method, path
-  end
-
   class Path
     METHODS = %i[get post put patch delete]
 
     attr_reader :method, :address
+
+    def self.convert(path)
+      klass  = path.class.name.split('::').last.downcase
+      method = :"from_#{klass}"
+
+      fail PathError unless Path.respond_to? method
+
+      Path.send method, path
+    end
 
     def self.from_string(address)
       Path.new(:get, address.to_s)
@@ -46,5 +44,7 @@ module MenuMaker
     def to_s
       address
     end
+
+    PathError = Class.new StandardError
   end
 end
