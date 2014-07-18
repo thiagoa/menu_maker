@@ -19,4 +19,5 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rails", "~> 4.0"
   s.add_development_dependency "shoulda-context", "~> 1.2.1"
+  s.add_development_dependency "codeclimate-test-reporter"
 end
