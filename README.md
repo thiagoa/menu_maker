@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/menu_maker.png)](http://badge.fury.io/rb/menu_maker)
 [![Code Climate](https://codeclimate.com/github/thiagoa/menu_maker.png)](https://codeclimate.com/github/thiagoa/menu_maker)
 [![Travis CI](https://travis-ci.org/thiagoa/menu_maker.svg)](https://travis-ci.org/thiagoa/menu_maker)
+[![Test Coverage](https://codeclimate.com/github/thiagoa/menu_maker/coverage.png)](https://codeclimate.com/github/thiagoa/menu_maker)
 
 Flexible solution to build any kind of menu in any Ruby framework. Currently best integrated with Rails.
 Supports recursive menus and swappable renderers for any menu depth. For instance, you can use a renderer
