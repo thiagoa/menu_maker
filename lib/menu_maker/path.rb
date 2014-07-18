@@ -11,7 +11,9 @@ module MenuMaker
     def initialize(method, path)
       method = method.to_sym.downcase
 
-      fail PathError unless self.class.valid_method? method
+      unless self.class.valid_method? method
+        fail PathError, "Method must be one of: #{METHODS.join(', ')}"
+      end
 
       @method = method
       @path   = path.to_s
@@ -54,7 +56,9 @@ module MenuMaker
 
       class GenericConverter
         def self.convert(path)
-          fail PathError unless respond_to_protocol?(path)
+          unless respond_to_protocol?(path)
+            fail PathError, "Don't know how to create path with #{path}"
+          end
 
           Path.new path.method, path.path
         end
