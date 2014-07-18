@@ -74,11 +74,11 @@ module MenuMaker
     end
 
     class MenuItem
-      attr_reader :title, :paths, :options
+      attr_reader :title, :options
 
       def initialize(title, *paths, **options)
         @title   = title
-        @paths   = paths
+        @paths   = paths.map { |p| Path.convert(p) }
         @options = options
       end
 
@@ -86,6 +86,10 @@ module MenuMaker
 
       def has_submenu?
         !@submenu.nil?
+      end
+
+      def paths
+        @paths.map(&:address)
       end
 
       def submenu_paths
@@ -113,7 +117,7 @@ module MenuMaker
       end
 
       def path
-        @paths.first
+        @paths.first.address
       end
 
       def render_submenu
