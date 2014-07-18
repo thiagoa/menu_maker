@@ -24,12 +24,12 @@ module MenuMaker
       def self.convert(path)
         type = path.class.name.to_s.split('::').last.to_s
 
-        const_get("#{type}PathConverter").convert path
+        const_get("#{type}Converter").convert path
       rescue NameError
-        GenericPathConverter.convert path
+        GenericConverter.convert path
       end
 
-      class ArrayPathConverter
+      class ArrayConverter
         def self.convert(path)
           has_method = proc { |el| METHODS.include? el }
 
@@ -40,13 +40,13 @@ module MenuMaker
         end
       end
 
-      class StringPathConverter
+      class StringConverter
         def self.convert(path)
           Path.new(:get, path.to_s)
         end
       end
 
-      class GenericPathConverter
+      class GenericConverter
         def self.convert(path)
           return path if path.is_a?(Path)
 
