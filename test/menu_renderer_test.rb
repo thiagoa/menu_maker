@@ -1,4 +1,6 @@
 require 'test_helper'
+require 'ostruct'
+require 'menu_maker/path'
 
 module MenuMaker
   class MenuRendererTest < ActiveSupport::TestCase
@@ -58,6 +60,20 @@ module MenuMaker
 
           assert_equal expected, menu_maker.render
         end
+      end
+    end
+
+    context 'with a MenuRenderer class renderer' do
+      should 'detect the path when not provided and the context responds to request' do
+        request = Class.new do
+          def method; 'POST'  end
+          def path;   '/path' end
+        end.new
+
+        context  = OpenStruct.new   request: request
+        renderer = MenuRenderer.new context
+
+        assert_equal Path.new(:post, '/path'), renderer.current_path
       end
     end
   end

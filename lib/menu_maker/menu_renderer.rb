@@ -44,16 +44,15 @@ module MenuMaker
     private
 
     def find_current_path(current_path)
-      current_path || request_path || ''
+      Path.convert(current_path || request || '')
     end
 
     def helpers_has_request?
-      helpers.respond_to?(:request) &&
-        helpers.request.respond_to?(:path)
+      helpers.respond_to?(:request)
     end
 
-    def request_path
-      helpers.request.path if helpers_has_request?
+    def request
+      helpers.request if helpers_has_request?
     end
   end
 end
