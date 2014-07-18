@@ -76,12 +76,10 @@ module MenuMaker
     class MenuItem
       attr_reader :title, :paths, :options
 
-      def initialize(title, path = nil, options = nil)
+      def initialize(title, *paths, **options)
         @title   = title
-        @paths   = []
+        @paths   = paths
         @options = options
-
-        @paths << path if path
       end
 
       attr_accessor :submenu

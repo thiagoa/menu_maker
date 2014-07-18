@@ -10,6 +10,11 @@ module MenuMaker
       assert_equal 'my/path', item.path
     end
 
+    test 'accepts many paths' do
+      item = Menu::MenuItem.new 'My title', 'path/1', 'path/2', 'path/3'
+      assert_equal ['path/1', 'path/2', 'path/3'], item.paths
+    end
+
     test 'submenu_paths returns submenu paths recursively' do
       item = Menu::MenuItem.new 'Level 1', 'level/1'
 
