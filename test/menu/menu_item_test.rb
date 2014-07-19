@@ -94,10 +94,10 @@ module MenuMaker
     end
 
     test "#has_submenu? returns true when item has a submenu" do
-      other_item = Menu::MenuItem.new 'One', 'level/1'
-      other_item.submenu = Menu.new(proc {})
+      item = Menu::MenuItem.new 'One', 'level/1'
+      item.submenu = Menu.new(proc {})
 
-      assert other_item.has_submenu?
+      assert item.has_submenu?
     end
   end
 end
