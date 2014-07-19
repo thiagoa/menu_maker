@@ -132,13 +132,13 @@ end
 menu_maker.render
 ```
 
-That's it. You can also create renderers for any menu depth: just create a MenuRendererContainer
+That's it. You can also create renderers for any menu depth: just create a MenuRendererCollection
 instance and pass it into the Menu instance:
 
 ```ruby
-renderer = MenuMaker::MenuRendererContainer.new do |container|
-  container.add_for_next_depth(CustomMenuRenderer.new(self, request.path))
-  container.add_for_next_depth(CustomSubmenuRenderer.new(self, request.path))
+renderer = MenuMaker::MenuRendererCollection.new do |collection|
+  collection.add(CustomMenuRenderer.new(self, request.path))
+  collection.add(CustomSubmenuRenderer.new(self, request.path))
 end
 
 menu_maker = MenuMaker::Menu.new(renderer) do |menu|
@@ -150,7 +150,7 @@ end
 menu_maker.render
 ```
 
-The first renderer passed into the container will render the main menu. The second renderer will
+The first renderer of the collection will render the main menu. The second renderer will
 render the submenus, and so forth.
 
 You can easily pack these short and simple factory methods into a custom helper, and use them for

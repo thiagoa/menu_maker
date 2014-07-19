@@ -1,5 +1,5 @@
 module MenuMaker
-  class MenuRendererContainer
+  class MenuRendererCollection
     def initialize
       @renderers     = {}
       @current_depth = 1
@@ -7,8 +7,8 @@ module MenuMaker
       yield self if block_given?
     end
 
-    def add_for_next_depth(renderer)
-      add @current_depth, renderer
+    def add(renderer)
+      @renderers[@current_depth] = renderer
       @current_depth += 1;
 
       self
@@ -16,12 +16,6 @@ module MenuMaker
 
     def for_depth(depth)
       @renderers[depth]
-    end
-
-    private
-
-    def add(depth, renderer)
-      @renderers[depth] = renderer
     end
   end
 end

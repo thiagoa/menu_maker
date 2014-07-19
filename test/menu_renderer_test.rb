@@ -43,9 +43,9 @@ module MenuMaker
         should 'render menu depths with respective renderers' do
           submenu_renderer = proc { |menu| '<ul><li>Static</li></ul>' }
 
-          renderer = MenuRendererContainer.new do |container|
-            container.add_for_next_depth proc_renderer
-            container.add_for_next_depth submenu_renderer
+          renderer = MenuRendererCollection.new do |collection|
+            collection.add proc_renderer
+            collection.add submenu_renderer
           end
 
           menu_maker = Menu.new(renderer) do |menu|

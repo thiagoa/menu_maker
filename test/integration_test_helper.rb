@@ -13,9 +13,9 @@ module MenuMaker
     end
 
     def example_menu(url)
-      renderers = MenuRendererContainer.new do |c|
-        c.add_for_next_depth(CustomMenuRenderer.new    self, url)
-        c.add_for_next_depth(CustomSubmenuRenderer.new self, url)
+      renderers = MenuRendererCollection.new do |collection|
+        collection.add(CustomMenuRenderer.new    self, url)
+        collection.add(CustomSubmenuRenderer.new self, url)
       end
 
       Menu.new(renderers, &menu_definition)

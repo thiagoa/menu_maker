@@ -1,9 +1,9 @@
 module MenuMaker
   module MenuHelper
     def menu_maker(active_path = nil, &block)
-      renderers = MenuRendererContainer.new do |c|
-        c.add_for_next_depth(CustomMenuRenderer.new    self, active_path)
-        c.add_for_next_depth(CustomSubmenuRenderer.new self, active_path)
+      renderers = MenuRendererCollection.new do |collection|
+        collection.add(CustomMenuRenderer.new    self, active_path)
+        collection.add(CustomSubmenuRenderer.new self, active_path)
       end
 
       Menu.new(renderers, &block).render
