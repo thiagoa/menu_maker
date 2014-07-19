@@ -1,9 +1,9 @@
 module MenuMaker
   class Path
-    METHODS = %i[get post put patch delete]
+    Methods = %i[get post put patch delete]
 
     def self.valid_method?(method)
-      METHODS.include? method
+      Methods.include? method
     end
 
     attr_reader :method, :path
@@ -12,7 +12,7 @@ module MenuMaker
       method = method.to_sym.downcase
 
       unless self.class.valid_method? method
-        fail PathError, "Method must be one of: #{METHODS.join(', ')}"
+        fail PathError, "Method must be one of: #{Methods.join(', ')}"
       end
 
       @method = method

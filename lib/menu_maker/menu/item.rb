@@ -5,7 +5,7 @@ module MenuMaker
 
       def initialize(title, *paths, **options)
         @title   = title
-        @paths   = paths.map { |p| Path::Converter.convert(p) }
+        @paths   = paths.map { |path| convert(path) }
         @options = options
       end
 
@@ -22,9 +22,9 @@ module MenuMaker
       def submenu_paths
         return [] unless has_submenu?
 
-        submenu.items.reduce([]) do |all, item|
-          all + item.paths + item.submenu_paths
-        end.flatten
+        submenu.items.reduce([]) do |paths, item|
+          paths + [*item.paths, *item.submenu_paths]
+        end
       end
 
       def all_paths
@@ -32,11 +32,11 @@ module MenuMaker
       end
 
       def has_path?(path)
-        all_paths.include? Path::Converter.convert(path)
+        all_paths.include? convert(path)
       end
 
       def method_missing(method, *args)
-        options && options[method] || ''
+        (options && options[method]) || ''
       end
 
       def respond_to_missing?(method)
@@ -53,6 +53,10 @@ module MenuMaker
 
       def to_s
         title
+      end
+
+      private def convert(path)
+        Path::Converter.convert path
       end
     end
   end
