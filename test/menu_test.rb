@@ -15,5 +15,41 @@ module MenuMaker
 
       assert_equal 'optional', menu.items.first.option
     end
+
+    test '#add creates a submenu when given a block' do
+      menu = Menu.new(proc {})
+      menu.add 'One', '1' do |submenu|
+        assert_instance_of Menu, submenu
+      end
+    end
+
+    test 'can retrieve the menu #items' do
+      menu = Menu.new(proc {})
+      menu.add 'One', '1'
+      menu.add 'Two', '2'
+
+      titles = [menu.items[0].title, menu.items[1].title]
+
+      assert_equal %w[One Two], titles
+    end
+
+    test 'can iterate through the items' do
+      menu = Menu.new(proc {})
+      menu.add 'One', '1'
+      menu.add 'Two', '2'
+
+      items = []
+
+      menu.each do |item|
+        items << item
+      end
+
+      assert %[One Two], items.map(&:title)
+    end
+
+    test '#render' do
+      menu = Menu.new(proc { 'render_this' })
+      assert_equal 'render_this', menu.render
+    end
   end
 end
