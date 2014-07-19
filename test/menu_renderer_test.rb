@@ -55,17 +55,16 @@ module MenuMaker
     end
 
     context 'child renderer rules and functionality' do
-      should 'place main logic inside a .render class block' do
-        child_renderer_class = Class.new(MenuRenderer) do
-          render { 'render_me' }
-        end
+      should "fail when not setup with .render class method" do
+        child_renderer = Class.new(MenuRenderer).new(proc {})
 
-        child_renderer = child_renderer_class.new(proc {})
-        assert_equal 'render_me', child_renderer.render
+        assert_raise MenuRenderer::MenuRendererError do
+          child_renderer.render
+        end
       end
 
-      context 'a .render call is required on child class definition' do
-        should 'define a #render method and protect the final output' do
+      context '.render class methods responsibilities' do
+        should 'define a #render method to force build_html on the output' do
           child_renderer_class = Class.new(MenuRenderer) do
             render { OpenStruct.new html_safe: 'assert_me' }
           end
@@ -73,6 +72,15 @@ module MenuMaker
           child_renderer = child_renderer_class.new(proc {})
           assert_equal 'assert_me', child_renderer.render
         end
+      end
+
+      should 'place main logic inside a .render class method block' do
+        child_renderer_class = Class.new(MenuRenderer) do
+          render { 'render_me' }
+        end
+
+        child_renderer = child_renderer_class.new(proc {})
+        assert_equal 'render_me', child_renderer.render
       end
     end
 

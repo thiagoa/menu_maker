@@ -41,6 +41,12 @@ module MenuMaker
       render
     end
 
+    def render
+      fail MenuRendererError,
+        'Please, use the render class method with ' +
+        'a block to define your main rendering logic'
+    end
+
     private
 
     def find_current_path(current_path)
@@ -54,5 +60,7 @@ module MenuMaker
     def request
       helpers.request if helpers_has_request?
     end
+
+    MenuRendererError = Class.new StandardError
   end
 end
