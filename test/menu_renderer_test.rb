@@ -3,8 +3,8 @@ require 'ostruct'
 
 module MenuMaker
   class MenuRendererTest < ActiveSupport::TestCase
-    def proc_renderer
-      proc do |menu|
+    context 'with a #call compliant renderer' do
+      ProcRenderer = proc do |menu|
         items = menu.inject('') do |html, item|
           link  = %{<a href="#{item.path}">#{item}</a>}
           html + %{<li>#{link}#{item.render_submenu}</li>}
@@ -12,21 +12,21 @@ module MenuMaker
 
         "<ul>#{items}</ul>"
       end
-    end
 
-    context 'with a renderer which responds to call' do
-      should 'render the menu' do
-        menu_maker = Menu.new(proc_renderer) do |menu|
-          menu.add 'First link', '/some/path'
+      context 'one renderer is supplied for a single-level menu' do
+        should 'render the menu' do
+          menu_maker = Menu.new(ProcRenderer) do |menu|
+            menu.add 'First link', '/some/path'
+          end
+
+          expected = '<ul><li><a href="/some/path">First link</a></li></ul>'
+          assert_equal expected, menu_maker.render
         end
-
-        expected = '<ul><li><a href="/some/path">First link</a></li></ul>'
-        assert_equal expected, menu_maker.render
       end
 
-      context 'when one renderer is available' do
-        should 'render all menu depths with the same renderer' do
-          menu_maker = Menu.new(proc_renderer) do |menu|
+      context 'one renderer is supplied for a two-level menu' do
+        should 'render all depths with the same renderer' do
+          menu_maker = Menu.new(ProcRenderer) do |menu|
             menu.add 'First link', '/some/path' do |submenu|
               submenu.add 'First sublink', '/some/path/new'
             end
@@ -39,12 +39,12 @@ module MenuMaker
         end
       end
 
-      context 'when two renderers are available' do
-        should 'render menu depths with respective renderers' do
+      context 'two renderers are supplied for a two level menu' do
+        should 'render depths with respective renderers' do
           submenu_renderer = proc { |menu| '<ul><li>Static</li></ul>' }
 
           renderer = MenuRendererCollection.new do |collection|
-            collection.add proc_renderer
+            collection.add ProcRenderer
             collection.add submenu_renderer
           end
 
@@ -62,17 +62,30 @@ module MenuMaker
       end
     end
 
-    context 'with a MenuRenderer class renderer' do
-      should 'detect the path when not provided and the context responds to request' do
-        request = Class.new do
-          def method; 'POST'  end
-          def path;   '/path' end
-        end.new
+    context 'with a MenuRenderer' do
+      context 'supplied context has a request' do
+        ContextStub = begin
+          request_stub = Class.new do
+            def method; 'POST'  end
+            def path;   '/path' end
+          end.new
 
-        context  = OpenStruct.new   request: request
-        renderer = MenuRenderer.new context
+          OpenStruct.new request: request_stub
+        end
 
-        assert_equal Path.new(:post, '/path'), renderer.current_path
+        context 'an explicit path is not supplied' do
+          should 'get the path from the request' do
+            renderer = MenuRenderer.new(ContextStub, nil)
+            assert_equal Path.new(:post, '/path'), renderer.current_path
+          end
+        end
+
+        context 'an explicit path is supplied' do
+          should 'not get the path from the request' do
+            renderer = MenuRenderer.new(ContextStub, '/other')
+            assert_equal Path.new(:get, '/other'), renderer.current_path
+          end
+        end
       end
     end
   end
