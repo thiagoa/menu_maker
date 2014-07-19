@@ -1,10 +1,10 @@
 require 'test_helper'
 require 'menu_maker'
-require 'integration_test_helper'
+require 'integration_helper'
 
 module MenuMaker
   class MenuHelperTest < ActionView::TestCase
-    include MenuTestHelper
+    include IntegrationHelper
 
     test 'outputs the menu with the first li active' do
       expected_output = menu_fixture(

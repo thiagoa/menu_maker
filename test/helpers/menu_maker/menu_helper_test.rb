@@ -1,11 +1,11 @@
 require 'test_helper'
 require 'menu_maker'
-require 'integration_test_helper'
+require 'integration_helper'
 
 module MenuMaker
   class MenuHelperTest < ActionView::TestCase
-    include MenuTestHelper
     include MenuHelper
+    include IntegrationHelper
 
     test 'menu helper that maps to Menu class' do
       expected_output = menu_fixture(
