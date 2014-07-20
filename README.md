@@ -253,7 +253,143 @@ end
 
 ### Class renderers
 
-TODO.
+If your logic is reasonably complex, your renderer should be a subclass of *MenuRenderer*. This approach
+is also recommended if you want to use built-in helpers.
+
+You must call the *render* class method, like in the following example:
+
+```ruby
+class MyRenderer < MenuRenderer
+  render do
+    # Place your core rendering logic here
+  end
+end
+```
+
+The *MenuRenderer* class has a *build\_menu* method, which helps you render each item:
+
+```ruby
+class MyRenderer < MenuRenderer
+  render do
+    items_output = build_menu do |item|
+      "<li><a href="#{item.path}">#{item.title}</a></li>"
+    end
+
+    "<ul>#{items_output}</ul>"
+  end
+end
+```
+
+You can query your item, for example, to determine if it needs custom CSS classes:
+
+```ruby
+class MyRenderer < MenuRenderer
+  render do
+    items_output = build_menu do |item, css_class|
+      css_class << 'dropdown' if item.has_submenu?
+      css_class << 'active'   if item.has_path?(current_path)
+
+      klass = if css_class.any?
+        %{ class="#{css_class.join(' ')}"}
+      else
+        ''
+      end
+
+      "<li#{klass}><a href="#{item.path}">#{item.title}</a></li>"
+    end
+
+    "<ul>#{items_output}</ul>"
+  end
+end
+```
+
+*MenuRenderer* also has a *build\_html* helper method, which automatically calls *html\_safe* for you, if you
+are using Rails. Remember to use it in each HTML part (except for *build\_menu*, which implicitly uses it):
+
+```ruby
+class MyRenderer < MenuRenderer
+  render do
+    items_output = build_menu do |item, css_class|
+      title = render_title(item)
+      # item rendering logic
+    end
+
+    "<ul>#{items_output}</ul>"
+  end
+
+  private
+  
+  def render_title(item)
+    build_html do
+      # title rendering logic
+    end
+  end
+end
+```
+
+You can make different *MenuRenderer* classes for menu and submenu. For example:
+
+```ruby
+CustomMenuRenderer < MenuRenderer
+  render do
+    # menu rendering logic
+  end
+end
+
+CustomSubmenuRenderer < MenuRenderer
+  render do
+    # submenu rendering logic
+  end
+end
+
+renderers = MenuRendererCollection.new do |collection|
+  collection.add CustomMenuRenderer.new(self)
+  collection.add CustomSubmenuRenderer.new(self)
+end
+
+final_menu = Menu.new(renderers) do |menu|
+  menu.add 'Item 1', 'my/path'
+  menu.add 'Item 2', 'my/path' do |submenu|
+    submenu.add 'Item 2.1', 'my/path'
+  end
+end
+
+final_menu.render
+```
+
+If you are using Rails, you can use regular helpers:
+
+```ruby
+class MyRenderer < MenuRenderer
+  render do
+    items_output = build_menu do |item, css_classes|
+      helpers.content_tag :li do
+        helpers.link_to item.title, item.path
+      end
+    end
+
+    content_tag :ul { items_output }
+  end
+end
+```
+
+To use Rails helpers you must instantiate your rendererer like so:
+
+```ruby
+# Rails helper example
+module MyHelper
+  def my_menu
+    # self is the helpers context
+    renderer = MyRenderer.new(self)
+
+    menu = Menu.new(renderer) do |m|
+      # Build your menu here
+    end
+
+    menu.render
+  end
+end
+```
 
 ## Contributing
 
