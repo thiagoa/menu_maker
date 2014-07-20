@@ -1,27 +1,18 @@
 require 'test_helper'
-require 'integration_helper'
 require_relative '../../../app/helpers/menu_maker/menu_helper.rb'
 
 module MenuMaker
   class MenuHelperTest < ActionView::TestCase
     include MenuHelper
-    include IntegrationHelper
 
-    test 'menu helper that maps to Menu class' do
-      expected_output = menu_fixture(
-        suppliers_li_class:  'dropdown active open',
-        list_supplier_class: 'active'
-      )
-
-      current_output = menu_maker('/cms/suppliers') do |menu|
-        menu.add 'Dashboard', '/cms/dashboard', icon: 'fa fa-dashboard'
-        menu.add 'Suppliers', '#', icon: 'fa fa-user' do |submenu|
-          submenu.add 'Add Supplier',   '/cms/suppliers/new'
-          submenu.add 'List Suppliers', '/cms/suppliers'
-        end
+    test 'menu helper maps to Menu class' do
+      output = menu_maker('/cms/suppliers') do |menu|
+        menu.add 'Dashboard', '/dashboard'
       end
 
-      assert_equal expected_output, current_output
+      expected = %{<ul><li><a href="/dashboard">Dashboard</a></li></ul>}
+
+      assert_equal expected, output
     end
   end
 end

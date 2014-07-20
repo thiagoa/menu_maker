@@ -13,9 +13,9 @@ module MenuMaker
       end
     end
 
-    def initialize(helpers, path = nil)
+    def initialize(helpers = nil, current_path = nil)
       @helpers      = helpers
-      @current_path = find_current_path(path)
+      @current_path = find_current_path(current_path)
     end
 
     def build_menu
