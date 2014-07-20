@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'light_test_helper'
 
 module MenuMaker
   class CallCompliantRendererTest < ActiveSupport::TestCase

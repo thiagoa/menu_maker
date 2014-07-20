@@ -1,5 +1,7 @@
+require 'light_test_helper'
+
 module MenuMaker
-  class PathConverterTest < ActionView::TestCase
+  class PathConverterTest < ActiveSupport::TestCase
     test 'creates a get path from a given string' do
       assert_equal Path.new(:get, '/path'), Path::Converter.convert('/path')
     end

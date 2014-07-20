@@ -1,7 +1,7 @@
-require 'test_helper'
+require 'light_test_helper'
 
 module MenuMaker
-  class PathTest < ActionView::TestCase
+  class PathTest < ActiveSupport::TestCase
     test 'accepts get, post, put, patch and delete' do
       %i[get post put patch delete].each do |method|
         Path.new method, '/path'

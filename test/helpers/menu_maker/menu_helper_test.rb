@@ -1,6 +1,6 @@
 require 'test_helper'
-require 'menu_maker'
 require 'integration_helper'
+require_relative '../../../app/helpers/menu_maker/menu_helper.rb'
 
 module MenuMaker
   class MenuHelperTest < ActionView::TestCase

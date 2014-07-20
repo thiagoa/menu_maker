@@ -1,5 +1,7 @@
+require 'light_test_helper'
+
 module MenuMaker
-  class MenuTest < ActionView::TestCase
+  class MenuTest < ActiveSupport::TestCase
     test '#add accepts multiple paths' do
       menu = Menu.new(proc {})
       menu.add('Item', '1', [:post, '2'], [:put,  '3'])

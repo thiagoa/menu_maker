@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'light_test_helper'
 require 'ostruct'
 
 module MenuMaker

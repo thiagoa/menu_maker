@@ -1,5 +1,7 @@
+require 'light_test_helper'
+
 module MenuMaker
-  class MenuItemTest < ActionView::TestCase
+  class MenuItemTest < ActiveSupport::TestCase
     test '#initialize accepts many paths' do
       item = Menu::MenuItem.new 'Title', 'path/1', 'path/2', 'path/3'
       assert_equal %w[path/1 path/2 path/3], item.paths.map(&:path)

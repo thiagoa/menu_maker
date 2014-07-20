@@ -1,12 +1,8 @@
 ENV["RAILS_ENV"] = "test"
 
+require 'light_test_helper'
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
-require "codeclimate-test-reporter"
-
-CodeClimate::TestReporter.start
-
 require "rails/test_help"
-require "shoulda-context"
 
 Rails.backtrace_cleaner.remove_silencers!
 
