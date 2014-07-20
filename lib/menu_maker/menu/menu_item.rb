@@ -50,7 +50,9 @@ module MenuMaker
         title
       end
 
-      private def to_path(path)
+      private
+
+      def to_path(path)
         Path::Converter.convert path
       end
     end
